@@ -1,0 +1,6 @@
+name: AdvConvex
+
+dependencies:
+  - python=3.10
+  - numpy
+  - matplotlib
