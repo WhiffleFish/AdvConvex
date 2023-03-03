@@ -13,4 +13,8 @@ export σ, μ, logistic_loss, logistic_loss_grad, logistic_loss_hess
 include("spam_data.jl")
 export get_spam_data, train_test_split
 
+include("solver.jl")
+export GradientDescentSolver, DifferentiableProblem, solve
+export NoLineSearch, BackTrackingLineSearch
+
 end

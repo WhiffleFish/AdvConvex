@@ -3,7 +3,12 @@ const SPAM_URL_RAW = "https://raw.githubusercontent.com/probml/pmtk3/master/data
 
 function get_spam_data()
     mat = readdlm(Downloads.download(SPAM_URL_RAW))
-    return Matrix(transpose(mat))
+    m = Matrix(transpose(mat))
+    Y = @view(m[end, :])
+    map!(Y,Y) do y_i # change y_i ∈ {1,0} to {1, -1}
+        iszero(y_i) ? -1 : y_i
+    end
+    return m
 end
 
 
