@@ -55,3 +55,10 @@ end
 
 (f::LogRegProblem)(w) = logistic_loss!(f.cache, w, f.X, f.Y)
 ∇(f::LogRegProblem, w) = logistic_loss_grad!(f.cache, w, f.X, f.Y)
+
+function accuracy(w,X,Y)
+    y_pred = map(X' * w) do x
+        σ(x) < 0.5 ? -1 : 1
+    end
+    return sum(y_pred .== Y) / length(Y)
+end

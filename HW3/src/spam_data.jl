@@ -16,11 +16,14 @@ function train_test_split(mat::Matrix, test_pct::Float64; shuffle=true, transfor
     shuffle && shuffle!(all_idxs)
     split_thresh = floor(Int, length(all_idxs) * test_pct)
 
-    A_train = mat[:, split_thresh+1 : end]
+    train_idxs = all_idxs[split_thresh+1 : end]
+    test_idxs = all_idxs[1:split_thresh]
+
+    A_train = mat[:, train_idxs]
     X_train = log.(A_train[1:end-1,:] .+ 0.1)
     Y_train = A_train[end, :]
 
-    A_test = mat[:, 1:split_thresh]
+    A_test = mat[:, test_idxs]
     X_test = log.(A_test[1:end-1, :] .+ 0.1)
     Y_test = A_test[end, :]
     return X_train, Y_train, X_test, Y_test
