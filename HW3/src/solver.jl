@@ -16,17 +16,18 @@ end
 
 function (ls::BackTrackingLineSearch)(f, ∇f, x, t)
     (;ρ,c) = ls
-    p_k = -∇f(x)
+    ∇f_x =∇f(x)
+    p_k = -∇f_x
     f_x = f(x)
-    while f(x + t*p_k) > f_x + c*t*dot(∇f(x), p_k)
+    while f(x + t*p_k) > f_x + c*t*dot(∇f_x, p_k)
         t *= ρ
     end
-    return x - t*∇f(x)
+    return x - t*∇f_x
 end
 
 Base.@kwdef struct SolverHistory
-    x::Vector{Vector{Float64}} = Vector{Float64}[]
-    f::Vector{Float64} = Float64[]
+    x::Vector{Vector{Float64}}  = Vector{Float64}[]
+    f::Vector{Float64}          = Float64[]
     ∇f::Vector{Vector{Float64}} = Vector{Float64}[]
 end
 
@@ -56,12 +57,9 @@ function solve(sol::GradientDescentSolver, p::DifferentiableProblem, x0)
         f_x_new = f(x)
         push!(hist, copy(x), copy(f_x), copy(∇f_x))
         Δf = f_x_new - f_x
+        f_x = f_x_new
         Δf > 0. && @warn "objective increase"
-        if abs(Δf) < ϵ
-            break
-        else
-            f_x = f_x_new
-        end
+        abs(Δf) < ϵ && break
     end
     return x, hist
 end

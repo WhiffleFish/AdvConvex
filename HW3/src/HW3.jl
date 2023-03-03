@@ -16,5 +16,6 @@ export get_spam_data, train_test_split
 include("solver.jl")
 export GradientDescentSolver, DifferentiableProblem, solve
 export NoLineSearch, BackTrackingLineSearch
+export LogRegProblem
 
 end
