@@ -1,6 +1,5 @@
 mat = get_spam_data()
 X_train, Y_train, X_test, Y_test = train_test_split(mat, 0.334)
-X_train, Y_train, X_test, Y_test = train_test_split(mat, 0.10)
 
 w0 = rand(size(X_train, 1))
 

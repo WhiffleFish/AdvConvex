@@ -18,7 +18,8 @@ end
 
 function forward_diff_grad_error(f, ∇f, x, h)
     ∇̂f = forward_diff(f, x, h)
-    return norm(∇f(x) .- ∇̂f, 2)
+    ∇f = ∇f(x)
+    return norm(∇f .- ∇̂f, 2) / norm(∇f, 2)
 end
 
 function forward_diff_grad_error(f, ∇f, x, h::AbstractVector)
@@ -42,7 +43,8 @@ end
 
 function centered_diff_grad_error(f, ∇f, x, h::Number)
     ∇̂f = centered_diff(f, x, h)
-    return norm(∇f(x) .- ∇̂f, 2)
+    ∇f = ∇f(x)
+    return norm(∇f .- ∇̂f, 2) / norm(∇f, 2)
 end
 
 function centered_diff_grad_error(f, ∇f, x, h::AbstractVector)

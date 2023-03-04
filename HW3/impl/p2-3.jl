@@ -51,9 +51,34 @@ sol = GradientDescentSolver(
     ϵ = 1e-15,
     linesearch = BackTrackingLineSearch()
 )
+x0 = zeros(n)
 x_opt,hist = solve(sol, prob, x0)
 
 p = plot(hist.f, yscale=:log10, xscale=:log10, label=L"f(x)", xlabel="step (log scale)", ylabel=L"f(x)", minorticks=9, minorgrid=true, lw=2)
 Plots.abline!(p, 0.0, f(true_x_opt), label=L"f(x^{*})", ls=:dash, lw=2)
 
 @test true_x_opt ≈ x_opt atol=1e-6
+
+αs = 10 .^ collect(-5.:0.)
+
+hist_v = HW3.SolverHistory[]
+for α ∈ αs
+    sol = GradientDescentSolver(
+        ; α,
+        max_iter = 10_000,
+        ϵ = 1e-15,
+        linesearch = BackTrackingLineSearch()
+    )
+    x_opt, hist = solve(sol, prob, zeros(n))
+    push!(hist_v, hist)
+end
+
+
+plot(
+    getfield.(hist_v, :f),
+    xscale=:log10;
+    labels = reshape(["α = 1e$x" for x ∈ -5:0], 1, length(αs)),
+    title = "Varying learning rate (α)",
+    xlabel = "step",
+    ylabel = L"f(x)"
+)
