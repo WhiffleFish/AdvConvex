@@ -6,7 +6,7 @@ end
 
 function solve(sol::GradientDescentSolver, p::ProximalProblem, x0)
     (;f, ∇g, prox_h) = p
-    (;α, ϵ) = sol
+    (;α, ϵ, linesearch) = sol
     hist = SolverHistory()
     x = copy(x0)
     f_x = f(x)
@@ -14,8 +14,9 @@ function solve(sol::GradientDescentSolver, p::ProximalProblem, x0)
     push!(hist, copy(x), copy(f_x), copy(∇g_x))
 
     for i ∈ 1:sol.max_iter
-        G_t_x = (x - prox_h.(x .- α*∇g_x)) / α
-        x = x - α*G_t_x
+        G_t_x = (x - prox_h.(x .- α*∇g_x, α)) / α
+        x = linesearch(f, G_t_x, x, α)
+        # x = x - α*G_t_x
         f_x_new = f(x)
         ∇g_x = ∇g(x)
         push!(hist, copy(x), copy(f_x), copy(G_t_x))

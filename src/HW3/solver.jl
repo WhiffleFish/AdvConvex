@@ -9,6 +9,8 @@ struct NoLineSearch end
 
 (::NoLineSearch)(f, ∇f, x, t) = x - t*∇f(x)
 
+(::NoLineSearch)(f, ∇f::AbstractVector, x, t) = x - t*∇f
+
 Base.@kwdef struct BackTrackingLineSearch
     ρ::Float64  = 0.90
     c::Float64  = 1e-4
